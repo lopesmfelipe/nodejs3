@@ -39,11 +39,11 @@ app.get("/api/games", async (req, res) => {
   }
 });
 
-app.post("/api/games", (req, res) => {
+app.post("/api/games", async (req, res) => {
   console.log(req.body);
   const game = new Game(req.body);
   try {
-    game.save();
+    await game.save();
     res.status(201).json({ game });
   } catch (e) {
     res.status(400).json({ error: e.message });
