@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Game = require("./models/game");
+const Potato = require("./models/game");
 
 const app = express();
 mongoose.set("strictQuery", false);
@@ -15,33 +15,36 @@ if (process.env.NODE_ENV !== "production") {
 const PORT = process.env.PORT || 3000;
 const CONNECTION = process.env.CONNECTION;
 
-const books = [
-  { name: "Atomic Habits", industry: "self-help" },
-  { name: "Surviving a Startup", industry: "entrepreneurship" },
-  { name: "Harry Potter", industry: "fantasy" },
-];
-
-const game = new Game({
-  name: "Red Dead Redemption",
-  dateRelease: 2018,
-});
-
 app.get("/", (req, res) => {
   res.send("AOOH SILVER");
 });
 
 app.get("/api/games", async (req, res) => {
   try {
-    const result = await Game.find();
+    const result = await Potato.find();
     res.json({ games: result });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/games/:id", async (req, res) => {
+  console.log({
+    requestParams: req.params,
+    requestQuery: req.query,
+  });
+  const gameId = req.params.id;
+  try {
+    const g = await Potato.findById(gameId);
+    res.json({ game: g });
+  } catch (err) {
+    res.status(500).json({ error: "Hey user! Something wrong in the server" });
   }
 });
 
 app.post("/api/games", async (req, res) => {
   console.log(req.body);
-  const game = new Game(req.body);
+  const game = new Potato(req.body);
   try {
     await game.save();
     res.status(201).json({ game });
