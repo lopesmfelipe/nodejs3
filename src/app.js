@@ -36,10 +36,20 @@ app.get("/api/games/:id", async (req, res) => {
   const gameId = req.params.id;
   try {
     const g = await Potato.findById(gameId);
-    res.json({ game: g });
+    if (!g) {
+      res.status(404).json({ error: "Game not found" });
+    } else {
+      res.json({ game: g });
+    }
   } catch (err) {
     res.status(500).json({ error: "Hey user! Something wrong in the server" });
   }
+});
+
+app.put("/api/customers/:id", async (req, res) => {
+  const gameId = req.params.id;
+  await Potato.replaceOne();
+  
 });
 
 app.post("/api/games", async (req, res) => {
