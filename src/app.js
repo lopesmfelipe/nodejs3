@@ -42,6 +42,13 @@ app.get("/api/games/:id", async (req, res) => {
   }
 });
 
+app.put("/api/games /:id", async (req, res) => {
+  const gameId = req.params.id;
+  const result = await Potato.replaceOne({ _id: gameId }, req.body);
+  console.log(result);
+  res.json({updatedCount: result.modifiedCount});
+});
+
 app.post("/api/games", async (req, res) => {
   console.log(req.body);
   const game = new Potato(req.body);
