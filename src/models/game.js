@@ -6,6 +6,12 @@ const gameSchema = new mongoose.Schema({
     required: true
   },
   releaseDate: Number,
+  orders: [
+    {
+      description: String,
+      amountInCents: Number
+    }
+  ]
 });
 
 module.exports = mongoose.model("games", gameSchema);
