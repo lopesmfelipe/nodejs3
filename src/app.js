@@ -46,10 +46,11 @@ app.get("/api/games/:id", async (req, res) => {
   }
 });
 
-app.put("/api/customers/:id", async (req, res) => {
+app.put("/api/games /:id", async (req, res) => {
   const gameId = req.params.id;
-  await Potato.replaceOne();
-  
+  const result = await Potato.replaceOne({ _id: gameId }, req.body);
+  console.log(result);
+  res.json({updatedCount: result.modifiedCount});
 });
 
 app.post("/api/games", async (req, res) => {
