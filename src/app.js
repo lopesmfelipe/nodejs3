@@ -26,8 +26,12 @@ if (process.env.NODE_ENV !== "production") {
 }
 const PORT = process.env.PORT || 3000;
 const CONNECTION = process.env.CONNECTION;
+if (!CONNECTION) {
+    console.error("MongoDB connection string not provided.");
+    process.exit(1);
+}
 app.get("/", (req, res) => {
-    res.send("Welcome to the Home Page!");
+    res.send("Home Page!");
 });
 app.get("/api/games", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -57,19 +61,21 @@ app.get("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(404).json({ error: "Something wrong in the server" });
     }
 }));
-app.get('/api/orders/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/api/orders/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const orderId = req.params.id;
     try {
-        const result = yield game_1.default.findOne({ 'orders._id': orderId });
+        const result = yield game_1.default.findOne({ "orders._id": orderId });
         if (result) {
             res.json(result.orders);
         }
         else {
-            res.status(404).json({ 'error': 'Order not found' });
+            res.status(404).json({ error: "Order not found" });
         }
     }
     catch (err) {
-        res.status(404).json({ error: "There was an internal problem, please try again later" });
+        res
+            .status(404)
+            .json({ error: "There was an internal problem, please try again later" });
     }
 }));
 app.put("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
