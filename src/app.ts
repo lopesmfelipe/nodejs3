@@ -1,7 +1,7 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const Potato = require("./models/game");
-const cors = require("cors");
+import express from "express";
+import mongoose from "mongoose";
+import Potato from "./models/game";
+import cors from "cors";
 
 const app = express();
 mongoose.set("strictQuery", false);

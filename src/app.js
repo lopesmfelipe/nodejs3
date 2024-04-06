@@ -8,15 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const express = require("express");
-const mongoose = require("mongoose");
-const Potato = require("./models/game");
-const cors = require("cors");
-const app = express();
-mongoose.set("strictQuery", false);
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const game_1 = __importDefault(require("./models/game"));
+const cors_1 = __importDefault(require("cors"));
+const app = (0, express_1.default)();
+mongoose_1.default.set("strictQuery", false);
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
@@ -27,7 +31,7 @@ app.get("/", (req, res) => {
 });
 app.get("/api/games", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield Potato.find();
+        const result = yield game_1.default.find();
         res.json({ games: result });
     }
     catch (err) {
@@ -41,7 +45,7 @@ app.get("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, functi
     });
     const gameId = req.params.id;
     try {
-        const g = yield Potato.findById(gameId);
+        const g = yield game_1.default.findById(gameId);
         if (!g) {
             res.status(404).json({ error: "Game not found" });
         }
@@ -56,7 +60,7 @@ app.get("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, functi
 app.get('/api/orders/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const orderId = req.params.id;
     try {
-        const result = yield Potato.findOne({ 'orders._id': orderId });
+        const result = yield game_1.default.findOne({ 'orders._id': orderId });
         if (result) {
             res.json(result.orders);
         }
@@ -71,7 +75,7 @@ app.get('/api/orders/:id', (req, res) => __awaiter(void 0, void 0, void 0, funct
 app.put("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const gameId = req.params.id;
     try {
-        const game = yield Potato.findOneAndReplace({ _id: gameId }, req.body, {
+        const game = yield game_1.default.findOneAndReplace({ _id: gameId }, req.body, {
             new: true,
         });
         console.log(game);
@@ -85,7 +89,7 @@ app.put("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, functi
 app.patch("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const gameId = req.params.id;
-        const game = yield Potato.findOneAndUpdate({ _id: gameId }, req.body, {
+        const game = yield game_1.default.findOneAndUpdate({ _id: gameId }, req.body, {
             new: true,
         });
         console.log(game);
@@ -101,7 +105,7 @@ app.patch("/api/orders/:id", (req, res) => __awaiter(void 0, void 0, void 0, fun
     const orderId = req.params.id;
     req.body._id = orderId;
     try {
-        const result = yield Potato.findOneAndUpdate({ "orders._id": orderId }, { $set: { "orders.$": req.body } }, { new: true });
+        const result = yield game_1.default.findOneAndUpdate({ "orders._id": orderId }, { $set: { "orders.$": req.body } }, { new: true });
         console.log(result);
         if (result) {
             res.json(result);
@@ -117,7 +121,7 @@ app.patch("/api/orders/:id", (req, res) => __awaiter(void 0, void 0, void 0, fun
 app.delete("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const gameId = req.params.id;
-        const result = yield Potato.deleteOne({ _id: gameId });
+        const result = yield game_1.default.deleteOne({ _id: gameId });
         res.json({ deletedCount: result.deletedCount });
     }
     catch (err) {
@@ -128,7 +132,7 @@ app.delete("/api/games/:id", (req, res) => __awaiter(void 0, void 0, void 0, fun
 }));
 app.post("/api/games", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
-    const game = new Potato(req.body);
+    const game = new game_1.default(req.body);
     try {
         yield game.save();
         res.status(201).json({ game });
@@ -142,7 +146,7 @@ app.post("/", (req, res) => {
 });
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose.connect(CONNECTION);
+        yield mongoose_1.default.connect(CONNECTION);
         app.listen(PORT, () => {
             console.log("App listening on port " + PORT);
         });

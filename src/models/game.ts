@@ -1,5 +1,4 @@
 import {Schema, model} from 'mongoose'
-const mongoose = require("mongoose");
 
 const gameSchema = new Schema({
   name: {
@@ -15,4 +14,5 @@ const gameSchema = new Schema({
   ]
 });
 
-export const Potato = model("games", gameSchema);
+const Potato = model("game", gameSchema);
+export default Potato;
