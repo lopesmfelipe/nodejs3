@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import Potato from "./models/game";
+import Game from "./models/game";
 import cors from "cors";
 import { Request, Response } from "express";
 
@@ -30,7 +30,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.get("/api/games", async (req: Request, res: Response) => {
   try {
-    const result = await Potato.find();
+    const result = await Game.find();
     res.json({ games: result });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -44,7 +44,7 @@ app.get("/api/games/:id", async (req: Request, res: Response) => {
   });
   const gameId = req.params.id;
   try {
-    const g = await Potato.findById(gameId);
+    const g = await Game.findById(gameId);
     if (!g) {
       res.status(404).json({ error: "Game not found" });
     } else {
@@ -58,7 +58,7 @@ app.get("/api/games/:id", async (req: Request, res: Response) => {
 app.get("/api/orders/:id", async (req: Request, res: Response) => {
   const orderId = req.params.id;
   try {
-    const result = await Potato.findOne({ "orders._id": orderId });
+    const result = await Game.findOne({ "orders._id": orderId });
     if (result) {
       res.json(result.orders);
     } else {
@@ -74,7 +74,7 @@ app.get("/api/orders/:id", async (req: Request, res: Response) => {
 app.put("/api/games/:id", async (req: Request, res:Response) => {
   const gameId = req.params.id;
   try {
-    const game = await Potato.findOneAndReplace({ _id: gameId }, req.body, {
+    const game = await Game.findOneAndReplace({ _id: gameId }, req.body, {
       new: true,
     });
     console.log(game);
@@ -88,7 +88,7 @@ app.put("/api/games/:id", async (req: Request, res:Response) => {
 app.patch("/api/games/:id", async (req: Request, res: Response) => {
   try {
     const gameId = req.params.id;
-    const game = await Potato.findOneAndUpdate({ _id: gameId }, req.body, {
+    const game = await Game.findOneAndUpdate({ _id: gameId }, req.body, {
       new: true,
     });
     console.log(game);
@@ -104,7 +104,7 @@ app.patch("/api/orders/:id", async (req: Request, res: Response) => {
   const orderId = req.params.id;
   req.body._id = orderId;
   try {
-    const result = await Potato.findOneAndUpdate(
+    const result = await Game.findOneAndUpdate(
       { "orders._id": orderId },
       { $set: { "orders.$": req.body } },
       { new: true }
@@ -124,7 +124,7 @@ app.patch("/api/orders/:id", async (req: Request, res: Response) => {
 app.delete("/api/games/:id", async (req: Request, res: Response) => {
   try {
     const gameId = req.params.id;
-    const result = await Potato.deleteOne({ _id: gameId });
+    const result = await Game.deleteOne({ _id: gameId });
     res.json({ deletedCount: result.deletedCount });
   } catch (err) {
     res.status(500).json({
@@ -135,7 +135,7 @@ app.delete("/api/games/:id", async (req: Request, res: Response) => {
 
 app.post("/api/games", async (req: Request, res: Response) => {
   console.log(req.body);
-  const game = new Potato(req.body);
+  const game = new Game(req.body);
   try {
     await game.save();
     res.status(201).json({ game });
